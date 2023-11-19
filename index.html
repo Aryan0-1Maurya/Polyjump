@@ -1,0 +1,2390 @@
+<!-- 
+
+      ************************************************************
+
+           ++++++++++++++    --------    +++++++++++++++++
+
+{   By ~Aryan Maurya Mr.perfect https://amsrportfolio.netlify.app  }
+
+           ++++++++++++++    --------    +++++++++++++++++
+
+      ************************************************************
+ -->
+<!-- AmsR Ghost -->
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=7" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <meta name="author" content="Aryan Maurya" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="favicon.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <meta
+      name="description"
+      content="This is online poly-jump game build for your imporove thing skill in this domain by aryan maurya enjoy your game"
+    />
+    <meta
+      name="keywords"
+      content="poly-jump games,poly jump,polyjumps games,poly games,animated polyjumps secior ,best rpsc game,world best animated games,rock ,paper,secior ,online games,play games, t rex dinoonline , games player , online t rex dinogame,online games hub, fun free, online , dino, human, computer, other game,color poly green shok,online dino game by aryan , aryan sir, aryan sir game"
+    />
+    <title>POLYJUMP</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Audiowide|Unica+One"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      canvas {
+        position: absolute;
+        left: 0px;
+        top: 0px;
+      }
+    </style>
+  </head>
+  <body id="body">
+    <canvas id="game" width="525px" height="550px"></canvas>
+    <script>
+        Swal.fire({
+    icon: 'info',
+    title: 'Orignally this game is build by Green Ghost ~me update',
+    showConfirmButton: false,
+    timer: 1500
+  })
+    </script>
+    <script>
+      // Get the body element.
+      var body = document.getElementById("body");
+
+      // Gets the canvas element and allows the user to draw on the canvas.
+      var canvas = document.getElementById("game");
+      var ctx = canvas.getContext("2d");
+
+      // Variables hold the width and height of the canvas.
+      var width = canvas.width;
+      var height = canvas.height;
+
+      // Controls whether to draw the stroke or fill
+      var isStroke = true;
+      var isFill = true;
+
+      // A draw function for animation.
+      function draw() {}
+
+      // A keyPressed function for key events.
+      function keyPressed() {}
+
+      // A keyReleased function for key events.
+      function keyReleased() {}
+
+      // A keyPressed function for when the user clicks.
+      function mouseClicked() {}
+
+      // The frameRate variable controls animation speed.
+      var frameRate = 60;
+
+      // Counts frames.
+      var frameCount = 0;
+
+      // Positions of the mouse.
+      var mouseX, mouseY;
+
+      // A keyCode variable.
+      var keyCode;
+
+      // Key code variables.
+      var LEFT = 37,
+        RIGHT = 39,
+        UP = 38,
+        DOWN = 40;
+
+      // Holds current text size.
+      var txtSize = 20;
+
+      var mainFont = "sans-serif";
+
+      /** Makes functions similar to the Processing JS functions. **/
+      // Returns a random number in a certain range.
+      function random(min, max) {
+        if (!min) {
+          return Math.random();
+        }
+        if (!max) {
+          max = min;
+          min = 0;
+        }
+        return min + Math.random() * (max - min);
+      }
+
+      // Returns a number from a certain range.
+      function lerp(num1, num2, amount) {
+        return num1 + (num2 - num1) * amount;
+      }
+
+      // Maps a number from one range to another.
+      function map(num, start1, stop1, start2, stop2) {
+        return start2 + ((num - start1) / stop1) * stop2;
+      }
+
+      // Constrains a number to a certain range.
+      function constrain(num, min, max) {
+        return Math.max(Math.min(num, max), min);
+      }
+
+      // Finds the distance between two points.
+      function dist(x1, y1, x2, y2) {
+        return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+      }
+
+      // Makes a color (returns a string).
+      function color(r, g, b, a) {
+        a = a === undefined ? 255 : a;
+        r = Math.floor(r);
+        g = Math.floor(g);
+        b = Math.floor(b);
+        if (arguments.length === 0) {
+          r = 0;
+          g = 0;
+          b = 0;
+        } else if (arguments.length === 1 || arguments.length === 2) {
+          g = r;
+          b = r;
+        }
+        if (arguments.length === 2) {
+          a = g;
+        }
+        return { r: r, g: g, b: b, a: a };
+      }
+
+      // Returns the red value of a color.
+      function red(color) {
+        return color.r;
+      }
+
+      // Returns the green value of a color.
+      function green(color) {
+        return color.g;
+      }
+
+      // Returns the blue value of a color.
+      function blue(color) {
+        return color.b;
+      }
+
+      // Returns the opactiy of a color.
+      function a(color) {
+        return color.a;
+      }
+
+      // Returns a string value color.
+      function getUsableColor(c) {
+        if (typeof c === "string") {
+          return getColor(c);
+        } else if (typeof c === "number") {
+          return getColor(color(c));
+        } else {
+          return c;
+        }
+      }
+
+      // Return a color inbetween two colors.
+      function lerpColor(c1, c2, amount) {
+        c1 = getUsableColor(c1);
+        c2 = getUsableColor(c2);
+        return color(
+          lerp(c1.r, c2.r, amount),
+          lerp(c1.g, c2.g, amount),
+          lerp(c1.b, c2.b, amount),
+          lerp(c1.a, c2.a, amount)
+        );
+      }
+
+      // Used for getting a color from a color object.
+      function getColor(n1, n2, n3, n4) {
+        if (n1 === undefined) {
+          n1 = 0;
+          n2 = 0;
+          n3 = 0;
+          n4 = 1;
+        } else if (n2 === undefined) {
+          if (n1.isGrad) {
+            return n1.grad;
+          }
+          if (typeof n1 !== "number") {
+            let c = n1;
+            n1 = c.r;
+            n2 = c.g;
+            n3 = c.b;
+            n4 = c.a / 255;
+          } else {
+            n2 = n1;
+            n3 = n1;
+            n4 = 1;
+          }
+        } else if (n3 === undefined) {
+          if (typeof n1 !== "number") {
+            let c = n1;
+            n4 = n2 / 255;
+            n1 = c.r;
+            n2 = c.g;
+            n3 = c.b;
+          } else {
+            n2 = n1;
+            n3 = n1;
+            n4 = n2 / 255;
+          }
+        } else if (n4 === undefined) {
+          n4 = 1;
+        } else {
+          n4 /= 255;
+        }
+        return "rgba(" + n1 + ", " + n2 + ", " + n3 + ", " + n4 + ")";
+      }
+
+      // Sets fill color.
+      function fill(r, g, b, a) {
+        isFill = true;
+        ctx.fillStyle = getColor(r, g, b, a);
+      }
+
+      // Sets stroke color.
+      function stroke(r, g, b, a) {
+        isStroke = true;
+        ctx.strokeStyle = getColor(r, g, b, a);
+      }
+
+      // Gets rid of stroke.
+      function noStroke() {
+        isStroke = false;
+      }
+
+      // Gets rid of fill.
+      function noFill() {
+        isFill = false;
+      }
+
+      // A sine function that converts from radians to degrees.
+      function sin(angle) {
+        return Math.sin((angle / 180) * Math.PI);
+      }
+
+      // A cosine function that converts from radians to degrees.
+      function cos(angle) {
+        return Math.cos((angle / 180) * Math.PI);
+      }
+
+      // An atan2 function.
+      function atan2(x, y) {
+        return (Math.atan2(x, y) / Math.PI) * 180;
+      }
+
+      // Translates to a certain point.
+      function translate(x, y) {
+        ctx.translate(x, y);
+      }
+
+      // Scales the drawing.
+      function scale(w, h) {
+        if (h === undefined) {
+          ctx.scale(w, w);
+          return;
+        }
+        ctx.scale(w, h);
+      }
+
+      // Rotates the drawing.
+      function rotate(angle) {
+        ctx.rotate((angle / 180) * Math.PI);
+      }
+
+      // Starts transformation.
+      function pushMatrix() {
+        ctx.save();
+      }
+
+      // Finishes transformation.
+      function popMatrix() {
+        ctx.restore();
+      }
+
+      // Sets the width of lines.
+      function strokeWeight(width) {
+        ctx.lineWidth = width;
+      }
+
+      // Starts a complex shape.
+      function beginShape() {
+        ctx.beginPath();
+      }
+
+      // Closes a complex shape.
+      function endShape() {
+        if (isFill) {
+          ctx.fill();
+        }
+        if (isStroke) {
+          ctx.stroke();
+        }
+      }
+
+      // Sets the position of the path.
+      function setPath(x, y) {
+        ctx.moveTo(x, y);
+      }
+
+      // Draws a vertex for a complex shape.
+      function vertex(x, y) {
+        ctx.lineTo(x, y);
+      }
+
+      // Draws a curve vertex for a complex shape.
+      function curveVertex(cx, cy, x, y) {
+        ctx.quadraticCurveTo(cx, cy, x, y);
+      }
+
+      // Draws a bezier vertex for a complex shape.
+      function bezierVertex(cx1, cy1, cx2, cy2, x, y) {
+        ctx.bezierCurveTo(cx1, cy1, cx2, cy2, x, y);
+      }
+
+      // Draws a curve.
+      function curve(x1, y1, cx, cy, x2, y2) {
+        beginShape();
+        setPath(x1, y1);
+        curveVertex(cx, cy, x2, y2);
+        endShape();
+      }
+
+      // Draws a bezier.
+      function bezier(x1, y1, cx1, cy1, cx2, cy2, x2, y2) {
+        beginShape();
+        setPath(x1, y1);
+        bezierVertex(cx1, cy1, cx2, cy2, x2, y2);
+        endShape();
+      }
+
+      // Draws a line.
+      function line(x1, y1, x2, y2) {
+        beginShape();
+        vertex(x1, y1);
+        vertex(x2, y2);
+        endShape();
+      }
+
+      // Draws a rectangle.
+      function rect(x, y, w, h, r, r2, r3, r4) {
+        r = r || 0;
+        r = constrain(r, -Math.min(w, h) / 2, Math.min(w, h) / 2);
+        if (r2 === undefined || r3 === undefined || r4 === undefined) {
+          r2 = r;
+          r3 = r;
+          r4 = r;
+        }
+        r2 = constrain(r2, -Math.min(w, h) / 2, Math.min(w, h) / 2);
+        r3 = constrain(r3, -Math.min(w, h) / 2, Math.min(w, h) / 2);
+        r4 = constrain(r4, -Math.min(w, h) / 2, Math.min(w, h) / 2);
+        beginShape();
+        setPath(x, y + r);
+        curveVertex(x, y, x + r, y);
+        vertex(x + w - r2, y);
+        curveVertex(x + w, y, x + w, y + r2);
+        vertex(x + w, y + h - r3);
+        curveVertex(x + w, y + h, x + w - r3, y + h);
+        vertex(x + r4, y + h);
+        curveVertex(x, y + h, x, y + h - r4);
+        vertex(x, y + r);
+        endShape();
+      }
+
+      // Draws an arc.
+      function arc(x, y, w, h, start, stop) {
+        pushMatrix();
+        beginShape();
+        translate(x, y);
+        scale(1, h / w);
+        ctx.arc(0, 0, w / 2, (start / 180) * Math.PI, (stop / 180) * Math.PI);
+        endShape();
+        popMatrix();
+      }
+
+      // Draws an ellipse.
+      function ellipse(x, y, w, h) {
+        arc(x, y, w, h, 0, 360);
+      }
+
+      // Draws a triangle.
+      function triangle(x1, y1, x2, y2, x3, y3) {
+        beginShape();
+        vertex(x1, y1);
+        vertex(x2, y2);
+        vertex(x3, y3);
+        vertex(x1, y1);
+        endShape();
+      }
+
+      // Draws a quad.
+      function quad(x1, y1, x2, y2, x3, y3, x4, y4) {
+        beginShape();
+        vertex(x1, y1);
+        vertex(x2, y2);
+        vertex(x3, y3);
+        vertex(x4, y4);
+        vertex(x1, y1);
+        endShape();
+      }
+
+      // Fills the background.
+      function background(r, g, b, a) {
+        let prev = ctx.fillStyle;
+        var wasStroke;
+        if (isStroke) {
+          wasStroke = true;
+          isStroke = false;
+        }
+        fill(r, g, b, a);
+        ctx.fillRect(0, 0, width, height);
+        fill(prev);
+        if (wasStroke) {
+          isStroke = true;
+        }
+      }
+
+      // Sets text font.
+      function textFont(font, size) {
+        size = size || txtSize;
+        txtSize = size;
+        mainFont = font;
+        ctx.font = size + "px " + mainFont;
+      }
+
+      // Sets text size.
+      function textSize(size) {
+        txtSize = size || 20;
+        ctx.font = txtSize + "px " + mainFont;
+      }
+
+      // Sets text alignment.
+      function textAlign(align, baseline) {
+        ctx.textAlign = align;
+        ctx.textBaseline = baseline;
+      }
+
+      // Draws text.
+      function text(txt, x, y) {
+        ctx.fillText(txt, x, y);
+      }
+
+      // Changes the cursor.
+      function cursor(name) {
+        document.body.style.cursor = name;
+      }
+
+      // Changes the a line's cap.
+      function strokeCap(cap) {
+        ctx.lineCap = "round";
+      }
+
+      // Creates a gradient.
+      var createGradient = function (x1, y1, x2, y2) {
+        return { isGrad: true, grad: ctx.createLinearGradient(x1, y1, x2, y2) };
+      };
+
+      // Adds a color to a gradient.
+      var addColor = function (gradient, amount, color) {
+        gradient.grad.addColorStop(amount, getColor(color));
+      };
+
+      // Draws an iamge on the canvas.
+      function image(imageName, x, y, w, h) {
+        w = w || imageName.width;
+        h = h || imageName.height;
+        ctx.drawImage(imageName, x, y, w, h);
+      }
+
+      // My own function to create images.
+      var getImage = function (shapes, width, height) {
+        let canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        canvas.display = "none";
+
+        let prevContext = ctx;
+        ctx = canvas.getContext("2d");
+
+        shapes();
+
+        ctx = prevContext;
+
+        return canvas;
+      };
+
+      // Moves the mouseX and mouseY variables.
+      body.addEventListener(
+        "mousemove",
+        function (event) {
+          mouseX = event.pageX;
+          mouseY = event.pageY;
+        },
+        false
+      );
+
+      // Moves the mouseX and mouseY variables.
+      body.addEventListener(
+        "touchmove",
+        function (event) {
+          mouseX = event.pageX;
+          mouseY = event.pageY;
+        },
+        false
+      );
+
+      // Checks for key pressed events.
+      body.addEventListener(
+        "keydown",
+        function (event) {
+          event.preventDefault();
+          keyCode = event.keyCode;
+          keyPressed();
+        },
+        false
+      );
+
+      // Checks for key released events.
+      body.addEventListener(
+        "keyup",
+        function (event) {
+          event.preventDefault();
+          keyCode = event.keyCode;
+          keyReleased();
+        },
+        false
+      );
+
+      // Checks for when the mouse is clicked.
+      body.addEventListener(
+        "mouseup",
+        function (event) {
+          mouseClicked();
+        },
+        false
+      );
+
+      // Checks for when the mouse is clicked.
+      body.addEventListener(
+        "touchend",
+        function (event) {
+          mouseClicked();
+        },
+        false
+      );
+
+      // Uses the draw function and frameRate variable.
+      var intervalId = setInterval(function () {
+        frameCount++;
+        draw();
+      }, 1000 / frameRate);
+    </script>
+
+    <!-- Script tag for the JavaScript in the game -->
+    <script>
+      /** Game code **/
+      // Name of the game.
+      var title = document.getElementsByTagName("title")[0].innerHTML;
+
+      function getScore(name, score) {
+        return { name: name, score: score };
+      }
+
+      // High scores.
+      var scoresList = [getScore("AmsR Ghost", 41)].sort(function (a, b) {
+        return b.score - a.score;
+      });
+
+      // Background color2.
+      var bgColor = createGradient(300, 600, 300, 1);
+      addColor(bgColor, 0.2, color(200, 250, 150));
+      addColor(bgColor, 0.5, color(50, 180, 255));
+      addColor(bgColor, 1, color(60, 10, 150));
+      var bgScoresColor = createGradient(300, 600, 300, 1);
+      addColor(bgScoresColor, 0.2, color(50, 180, 255));
+      addColor(bgScoresColor, 0.5, color(60, 10, 150));
+      addColor(bgScoresColor, 1, color(200, 50, 250));
+      body.style.backgroundColor = getColor(color(200, 250, 150));
+
+      var getRandom = (function () {
+        getRandom = {};
+        getRandom.primes = [
+          1345147249, 1345761201, 1401684617, 1531031083, 1674157997,
+        ];
+
+        // Adds entropy to a value.
+        getRandom.addEntropy = function (val) {
+          return (
+            (this.primes[0] * val + this.primes[1] * 17 + this.primes[2]) %
+            this.primes[4]
+          );
+        };
+
+        // Returns a pseudo-random number.
+        getRandom.random = function (seed) {
+          seed = this.addEntropy(seed);
+          return (
+            ((this.primes[0] * seed + this.primes[3]) % this.primes[4]) /
+            this.primes[4]
+          );
+        };
+
+        // Returns a pseudo-random number from one to one hundred.
+        getRandom.randCent = function (seed) {
+          return Math.floor(this.random(seed) * 100);
+        };
+
+        return getRandom;
+      })();
+
+      // Checks for if the mouse is clicked.
+      var click = false;
+
+      // Checks if the mouse is over a button.
+      var overButton = false;
+
+      // Empty scene function.
+      var scene = function () {};
+
+      // Array for smooth player motion.
+      var keys = [];
+
+      // Smooth motion function.
+      function smooth(pos, dest, div) {
+        return (dest - pos) / div;
+      }
+
+      var colors = [color(255, 255, 0), color(255, 0, 255), color(0, 255, 255)];
+
+      /** Motion **/
+      // {
+      var close = function (p1, p2) {
+        return Math.abs(p1 - p2) < 0.05;
+      };
+
+      var Bounce = (function () {
+        Bounce = function (pos, dest, speed) {
+          this.pos = pos;
+          this.dest = dest;
+          this.speed = speed / 10;
+          this.veloc = smooth(this.pos, this.dest, 50);
+        };
+
+        Bounce.prototype.move = function () {
+          if (this.pos < this.dest) {
+            this.veloc++;
+          } else if (this.pos > this.dest) {
+            this.veloc--;
+          }
+          if (this.veloc > 0) {
+            this.veloc -= this.speed;
+          } else if (this.veloc < 0) {
+            this.veloc += this.speed;
+          }
+          if (close(this.pos, this.dest) && this.veloc < this.speed * 5) {
+            this.pos = this.dest;
+            this.veloc = 0;
+          } else {
+            this.pos += this.veloc;
+          }
+        };
+
+        return Bounce;
+      })();
+      // }
+
+      var Player, Polygon, Coin, player, polygons;
+
+      var sceneChanger = (function () {
+        sceneChanger = {};
+
+        sceneChanger.ellipses = [];
+        for (var i = 0; i < width / 50 + 1; i++) {
+          sceneChanger.ellipses.push(0);
+        }
+        sceneChanger.from = 0;
+        sceneChanger.to = 0;
+        sceneChanger.go = false;
+        sceneChanger.scene = function () {};
+
+        sceneChanger.display = function () {
+          noStroke();
+          for (var i = 0; i < this.ellipses.length; i++) {
+            fill(255, 255, 255, this.ellipses[i]);
+            ellipse(i * 50 - 25, 300, 100, 700);
+            if (
+              i > this.from &&
+              i < this.to &&
+              this.ellipses[i] < 255 &&
+              this.go
+            ) {
+              this.ellipses[i] += 20;
+            } else if (this.ellipses[i] > 0 && i < this.from) {
+              this.ellipses[i] -= 20;
+            }
+          }
+          if (this.go) {
+            if (frameCount % 2 === 0 && this.to < this.ellipses.length) {
+              this.to++;
+            }
+            if (this.ellipses[this.ellipses.length - 1] >= 255) {
+              scene = this.scene;
+              if (scene === game) {
+                player.reset();
+                polygons = [new Polygon(0, -300)];
+                coins = [];
+              }
+              this.go = false;
+            }
+          } else {
+            if (frameCount % 2 === 0 && this.from < this.ellipses.length) {
+              this.from++;
+            }
+          }
+        };
+
+        sceneChanger.reset = function (scene) {
+          if (this.go) {
+            return;
+          }
+
+          for (var i = 0; i < this.ellipses.length; i++) {
+            this.ellipses[i] = 0;
+          }
+          this.go = true;
+          this.from = 0;
+          this.to = 0;
+          this.scene = scene;
+        };
+
+        return sceneChanger;
+      })();
+
+      var skinAmount = 8;
+      var unlocked = [true, false, false, false, false, false, false, false];
+      function drawPlayer(x, y, size, skin, eyeY, color) {
+        pushMatrix();
+        translate(x, y);
+        scale(size / 60, size / 60);
+        fill(0, 0, 0);
+        strokeWeight(2);
+        stroke(colors[color]);
+        ellipse(0, 0, 60, 60);
+        noStroke();
+        fill(colors[color]);
+        switch (skin) {
+          case 0:
+            ellipse(-10, eyeY, 10, 20);
+            ellipse(10, eyeY, 10, 20);
+            break;
+          case 1:
+            ellipse(-10, eyeY, 10, 20);
+            ellipse(10, eyeY, 10, 20);
+            noFill();
+            stroke(colors[color]);
+            strokeWeight(4);
+            arc(-15, eyeY - 5, 10, 5, 0, 180);
+            arc(15, eyeY - 5, 10, 5, 0, 180);
+            break;
+          case 2:
+            arc(-10, eyeY - 3, 10, 20, 0, 180);
+            arc(10, eyeY - 3, 10, 20, 0, 180);
+            break;
+          case 3:
+            arc(-10, eyeY + 3, 10, 20, 180, 360);
+            fill(0, 0, 0);
+            ellipse(-10, eyeY + 3, 10, 5);
+            noFill();
+            strokeWeight(2);
+            stroke(colors[color]);
+            arc(10, eyeY, 10, 10, 181, 360);
+            break;
+          case 4:
+            ellipse(-10, eyeY, 15, 10);
+            ellipse(10, eyeY, 15, 10);
+            ellipse(0, eyeY - 10, 15, 10);
+            fill(0, 0, 0);
+            ellipse(-10, eyeY - 1, 3, 8);
+            ellipse(10, eyeY - 1, 3, 8);
+            ellipse(0, eyeY - 11, 3, 8);
+            break;
+          case 5:
+            ellipse(0, eyeY - 5, 25, 25);
+            fill(0, 0, 0);
+            ellipse(1, eyeY - 7, 15, 15);
+            strokeWeight(2);
+            stroke(colors[color]);
+            noFill();
+            arc(0, eyeY - 3, 30, 30, 30, 150);
+            break;
+          case 6:
+            rect(-15, eyeY - 7, 30, 5);
+            triangle(-8, eyeY - 10, 8, eyeY - 10, 0, eyeY - 15);
+            ellipse(-13, 10, 3, 3);
+            ellipse(-18, 7, 3, 3);
+            ellipse(-16, 13, 3, 3);
+            ellipse(13, 10, 3, 3);
+            ellipse(18, 7, 3, 3);
+            ellipse(16, 13, 3, 3);
+            break;
+          case 7:
+            ellipse(-8, eyeY - 3, 20, 20);
+            ellipse(12, eyeY, 15, 15);
+            ellipse(0, 15, 25, 10);
+            fill(0, 0, 0);
+            ellipse(-5, eyeY - 5, 15, 15);
+            ellipse(15, eyeY - 2, 10, 10);
+            break;
+        }
+        popMatrix();
+      }
+
+      var coins = [],
+        coinTarget = { x: 30, y: 60 },
+        coinSize = 20;
+      var present = { total: 0, on: false };
+      var drawCoin = function (x, y, size) {
+        noStroke();
+        textFont("Audiowide", size);
+        textAlign("center", "middle");
+        fill(200, 170, 120);
+        pushMatrix();
+        translate(x, y);
+        beginShape();
+        for (var i = 0; i < 6; i++) {
+          vertex(sin(i * 60) * size, -cos(i * 60) * size);
+        }
+        endShape();
+        fill(0, 0, 50, 30);
+        beginShape();
+        for (var i = 0; i < 6; i++) {
+          vertex(sin(i * 60) * size * 0.8, -cos(i * 60) * size * 0.8);
+        }
+        endShape();
+        fill(255, 255, 245, 30);
+        beginShape();
+        for (var i = 0; i < 4; i++) {
+          vertex(sin(i * 60 - 60) * size, -cos(i * 60 - 60) * size);
+        }
+        endShape();
+        fill(150, 120, 110);
+        text("1", 0, 0);
+        popMatrix();
+      };
+
+      Coin = (function () {
+        Coin = function (x, y) {
+          this.x = x;
+          this.y = y;
+          this.startRot = random(360);
+          this.xMove = random(-5, 5);
+          this.yMove = random(-5, 5);
+          this.size = 20;
+          this.dead = false;
+        };
+
+        Coin.prototype.display = function () {
+          pushMatrix();
+          translate(this.x, this.y);
+          scale(Math.abs(sin(this.startRot)), 1);
+          drawCoin(0, 0, this.size);
+          popMatrix();
+          this.startRot += 5;
+        };
+
+        Coin.prototype.pack = function () {
+          if (this.x > coinTarget.x) {
+            this.xMove -= 0.5;
+          } else {
+            this.xMove += 0.5;
+          }
+          if (this.y > coinTarget.y) {
+            this.yMove -= 0.5;
+          } else {
+            this.yMove += 0.5;
+          }
+          this.xMove += smooth(this.xMove, 0, 15);
+          this.yMove += smooth(this.yMove, 0, 15);
+          this.xMove = constrain(this.xMove, -8, 8);
+          this.yMove = constrain(this.yMove, -8, 8);
+          this.x += this.xMove;
+          this.y += this.yMove;
+          if (dist(this.x, this.y, coinTarget.x, coinTarget.y) < 30) {
+            this.dead = true;
+          }
+
+          this.display();
+        };
+
+        return Coin;
+      })();
+
+      Player = (function () {
+        Player = function () {
+          this.x = 0;
+          this.y = 0;
+          this.score = 0;
+          this.skin = 0;
+          this.launch = false;
+          this.setRot = false;
+          this.eyeY = -2;
+          this.color = 0;
+          this.oldColor = { color: 0, size: 60, opac: 0 };
+          this.ang = 0;
+          this.setAng = 180;
+          this.particles = [];
+          this.dead = false;
+          this.score = 0;
+          this.highScore = 0;
+          this.timer = 60;
+          this.polygon = {};
+          this.polyDist = 0;
+          this.demo = [
+            {
+              seen: false,
+              show: true,
+              message: "Click or press space to play",
+              amount: 0,
+            },
+            {
+              seen: false,
+              show: true,
+              message: "This changes your color",
+              amount: 0,
+            },
+            {
+              seen: false,
+              show: true,
+              message: "Don't let that timer run out",
+              amount: 0,
+            },
+            {
+              seen: false,
+              show: true,
+              message: "Match your color to the right side",
+              amount: 0,
+            },
+            {
+              seen: false,
+              show: true,
+              message: "You get coins every ten points",
+              amount: 0,
+            },
+          ];
+          this.path = [];
+          this.coins = 0;
+        };
+
+        Player.prototype.display = function () {
+          if (!this.dead) {
+            if (frameCount % 5 === 0 && this.launch) {
+              this.path.push({
+                x: this.x,
+                y: this.y,
+                color: this.color,
+                size: 30,
+              });
+            }
+            noFill();
+            strokeWeight(2);
+            for (var i = this.path.length - 1; i >= 0; i--) {
+              stroke(colors[this.path[i].color]);
+              ellipse(
+                this.path[i].x,
+                this.path[i].y,
+                this.path[i].size,
+                this.path[i].size
+              );
+              this.path[i].size -= 2;
+              if (this.path[i].size <= 0) {
+                this.path.splice(i, 1);
+              }
+            }
+            pushMatrix();
+            translate(this.x, this.y);
+            drawPlayer(0, 0, 60, this.skin, this.eyeY, this.color);
+            noFill();
+            strokeWeight(1.5);
+            stroke(colors[this.oldColor.color], this.oldColor.opac);
+            ellipse(0, 0, this.oldColor.size, this.oldColor.size);
+            for (var i = 0; i < 10; i++) {
+              ellipse(
+                (sin(i * 36) * this.oldColor.size) / 1.7,
+                (-cos(i * 36) * this.oldColor.size) / 1.7,
+                5,
+                5
+              );
+            }
+            this.oldColor.size += 5;
+            this.oldColor.opac -= 7;
+            popMatrix();
+          } else {
+            noStroke();
+            for (var i = this.particles.length - 1; i >= 0; i--) {
+              fill(this.particles[i].color, this.particles[i].opac);
+              ellipse(
+                this.particles[i].x,
+                this.particles[i].y,
+                this.particles[i].size,
+                this.particles[i].size
+              );
+              this.particles[i].x += this.particles[i].xMove;
+              this.particles[i].yMove += 0.1;
+              this.particles[i].y += this.particles[i].yMove;
+              if (
+                this.particles[i].y + 300 - this.y >
+                height + this.particles[i].size
+              ) {
+                this.particles.splice(i, 1);
+              }
+            }
+            this.timer--;
+            if (this.timer <= 0) {
+              sceneChanger.reset(gameOver);
+            }
+          }
+        };
+
+        Player.prototype.move = function () {
+          if (!this.launch) {
+            this.resetLaunch();
+            return;
+          }
+          if (!this.dead) {
+            this.y -= 10;
+          }
+        };
+
+        Player.prototype.resetLaunch = function () {
+          if (!this.setRot) {
+            return;
+          }
+          this.setAng += smooth(this.setAng, 0, 8);
+          if (Math.abs(this.setAng) < 3) {
+            this.setAng = 0;
+            this.setRot = false;
+            if (this.score % 10 === 0) {
+              this.coins += Math.floor(this.score / 10);
+              for (var i = 0; i < Math.floor(this.score / 10); i++) {
+                coins.push(
+                  new Coin(
+                    this.polygon.x + (300 - this.x),
+                    this.polygon.y + (300 - this.y)
+                  )
+                );
+              }
+            }
+          }
+          if (this.polygon.x !== undefined) {
+            this.polyDist =
+              Math.sqrt(
+                Math.pow(this.polygon.size, 2) -
+                  Math.pow(
+                    dist(
+                      this.polygon.sides[0].x,
+                      this.polygon.sides[0].y,
+                      this.polygon.sides[1].x,
+                      this.polygon.sides[1].y
+                    ) / 2,
+                    2
+                  )
+              ) + 25;
+            this.x = this.polygon.x + sin(this.setAng) * this.polyDist;
+            this.y = this.polygon.y - cos(this.setAng) * this.polyDist;
+          }
+        };
+
+        Player.prototype.pack = function () {
+          for (var i = 0; i < this.demo.length; i++) {
+            this.demo[i].amount = 0;
+          }
+          if (
+            (keys[32] || click) &&
+            !this.launch &&
+            !this.setRot &&
+            !this.dead
+          ) {
+            this.launch = true;
+            keys[32] = false;
+            this.setRot = false;
+            this.polygon.left = true;
+            this.polygon = {};
+          }
+          if (this.launch) {
+            this.eyeY += smooth(this.eyeY, -10, 6);
+          } else {
+            this.eyeY += smooth(this.eyeY, -2, 6);
+          }
+          this.display();
+          if (this.demo[0].show) {
+            textAlign("center", "middle");
+            textFont("Audiowide", 30);
+            fill(255, 255, 255);
+            text(this.demo[0].message, 0, 150);
+            if (300 - player.y + 100 > height) {
+              this.demo[0].show = false;
+            }
+          }
+        };
+
+        Player.prototype.interact = function (poly) {
+          if (!poly.canHit) {
+            return;
+          }
+          if (!this.launch) {
+            return;
+          }
+
+          var col = poly.collide(this.x, this.y);
+          if (col) {
+            this.launch = false;
+            col -= 1;
+            col += col < 0 ? poly.sides.length : 0;
+            this.colorTest = poly.sides[col].color;
+            poly.canHit = false;
+            if (this.colorTest !== this.color) {
+              this.die();
+            } else {
+              this.polygon = poly;
+              if (poly.mode === 0) {
+                this.oldColor.color = this.color;
+                this.oldColor.size = 60;
+                this.oldColor.opac = 255;
+                this.color = poly.colorTo;
+              } else if (poly.mode === 1) {
+                poly.timing = true;
+              }
+              this.launch = false;
+              this.setRot = true;
+              poly.setRot = true;
+              this.setAng = 180;
+              poly.dest = 180 / (poly.sides.length - 1);
+              poly.oldFade = 255;
+              for (var i = 0; i < poly.sides.length; i++) {
+                poly.oldSides.push(poly.sides[i].color);
+                poly.sides[i].color = this.color;
+              }
+              this.score++;
+              if (polygons.length === 1) {
+                polygons.push(new Polygon(0, polygons[0].y - 400));
+              }
+            }
+          }
+        };
+
+        Player.prototype.die = function () {
+          if (this.dead) {
+            return;
+          }
+          this.dead = true;
+          present.total += this.score;
+          let check = Math.floor(random(40, 50));
+          if (present.total >= check) {
+            present.total -= check;
+            present.on = true;
+          }
+          this.highScore = Math.max(this.score, this.highScore);
+          for (var i = 0; i < 20; i++) {
+            this.particles.push({
+              x: this.x,
+              y: this.y,
+              xMove: random(-2, 2),
+              yMove: random(-4),
+              size: random(10, 20),
+              color: lerpColor(colors[this.color], color(0, 0, 0), random(0.2)),
+            });
+          }
+        };
+
+        Player.prototype.reset = function () {
+          this.x = 0;
+          this.y = 0;
+          this.score = 0;
+          this.launch = false;
+          this.setRot = false;
+          this.eyeY = 0;
+          this.color = Math.floor(random(3));
+          this.oldColor = { color: 0, size: 60, opac: 0 };
+          this.ang = 0;
+          this.setAng = 180;
+          this.particles = [];
+          this.dead = false;
+          this.score = 0;
+          this.timer = 60;
+          this.polygon = {};
+          this.polyDist = 0;
+        };
+
+        return Player;
+      })();
+
+      player = new Player();
+
+      Polygon = (function () {
+        Polygon = function (x, y) {
+          this.startX = x;
+          this.startY = y;
+          this.old = false;
+          this.dead = false;
+          this.firstCoin = player.score === 9;
+          this.reset();
+        };
+
+        Polygon.prototype.testPossible = function () {
+          for (var i = 0; i < this.sides.length; i++) {
+            if (this.sides[i].color === player.color) {
+              return true;
+            }
+          }
+          return false;
+        };
+
+        Polygon.prototype.reset = function () {
+          this.angle = 0;
+          this.sideAmount = 4 + Math.floor(random(5));
+          this.rotatePlus = random(360);
+          this.dest = this.rotatePlus;
+          this.size = random(90, 140);
+          this.setRot = false;
+          this.sides = [];
+          this.x = this.startX;
+          this.y = this.startY;
+          this.speed = 0.5 + random(1) + player.score / 10;
+          for (var i = 0; i < this.sideAmount; i++) {
+            this.sides.push({
+              x:
+                this.x +
+                sin((i * 360) / this.sideAmount + this.rotatePlus) * this.size,
+              y:
+                this.y -
+                cos((i * 360) / this.sideAmount + this.rotatePlus) * this.size,
+              color: Math.floor(random(colors.length)),
+            });
+          }
+          if (!this.testPossible()) {
+            this.sides[0].color = player.color;
+          }
+          this.oldSides = [];
+          this.oldFade = 0;
+          this.sides.push(this.sides[0]);
+          this.mode = Math.floor(random(4));
+          if (this.y === -300) {
+            this.mode = 2;
+          }
+          this.canHit = true;
+          this.timing = false;
+          this.left = false;
+          if (this.mode === 0) {
+            this.colorTo = Math.floor(random(3));
+            while (this.colorTo === player.color) {
+              this.colorTo = Math.floor(random(3));
+            }
+          } else if (this.mode === 1) {
+            this.deathTimer = 300;
+            this.spikePos = 0;
+          }
+        };
+
+        Polygon.prototype.display = function () {
+          strokeCap("round");
+          strokeWeight(this.size / 20);
+          for (var i = 0; i < this.sides.length - 1; i++) {
+            stroke(colors[this.sides[i].color]);
+            bezier(
+              this.sides[i].x,
+              this.sides[i].y,
+              lerp(
+                this.sides[i].x,
+                this.sides[(i + 1) % this.sides.length].x,
+                1 / 3
+              ) +
+                (-5 + getRandom.random(Math.floor(frameCount / 10) + i) * 10),
+              lerp(
+                this.sides[i].y,
+                this.sides[(i + 1) % this.sides.length].y,
+                1 / 3
+              ) +
+                (-5 +
+                  getRandom.random(Math.floor(frameCount / 10) + i + 1) * 10),
+              lerp(
+                this.sides[i].x,
+                this.sides[(i + 1) % this.sides.length].x,
+                2 / 3
+              ) +
+                (-5 +
+                  getRandom.random(Math.floor(frameCount / 10) + i + 2) * 10),
+              lerp(
+                this.sides[i].y,
+                this.sides[(i + 1) % this.sides.length].y,
+                2 / 3
+              ) +
+                (-5 +
+                  getRandom.random(Math.floor(frameCount / 10) + i + 3) * 10),
+              this.sides[(i + 1) % this.sides.length].x,
+              this.sides[(i + 1) % this.sides.length].y
+            );
+          }
+          strokeWeight(this.size / 15);
+          this.oldFade -= 12;
+          for (var i = 0; i < this.oldSides.length - 1; i++) {
+            stroke(colors[this.oldSides[i]], this.oldFade);
+            line(
+              this.sides[i].x,
+              this.sides[i].y,
+              this.sides[(i + 1) % this.sides.length].x,
+              this.sides[(i + 1) % this.sides.length].y
+            );
+          }
+          noStroke();
+          if (this.timing) {
+            this.deathTimer--;
+          }
+          if (this.deathTimer <= 0 && !this.left) {
+            this.timing = false;
+            this.spikePos += smooth(this.spikePos, 1, 6);
+            if (this.spikePos > 0.7) {
+              player.die();
+            }
+            fill(100, 100, 100);
+            pushMatrix();
+            translate(this.x, this.y);
+            for (var i = 0; i < 8; i++) {
+              rotate(45);
+              triangle(
+                -this.size / 5,
+                0,
+                this.size / 5,
+                0,
+                0,
+                this.size * this.spikePos * 1.2
+              );
+            }
+            popMatrix();
+          }
+          if (this.mode === 0) {
+            fill(colors[this.colorTo]);
+            ellipse(this.x, this.y, this.size / 1.8, this.size / 1.8);
+            fill(255, 255, 255, 70);
+            ellipse(this.x, this.y, this.size / 2.5, this.size / 2.5);
+            pushMatrix();
+            translate(this.x, this.y);
+            rotate(30);
+            ellipse(0, -this.size / 10, this.size / 5, this.size / 8);
+            popMatrix();
+            if (player.demo[1].show && player.demo[1].amount < 1) {
+              player.demo[1].amount++;
+              textAlign("center", "middle");
+              textFont("Audiowide", 20);
+              fill(255, 255, 255);
+              text(player.demo[1].message, 0, this.y + this.size * 1.2);
+              if (this.y + this.size * 1.2 + 300 - player.y > height) {
+                player.demo[1].show = false;
+              }
+            }
+          } else if (this.mode === 1) {
+            pushMatrix();
+            translate(this.x, this.y);
+            fill(100, 100, 100);
+            ellipse(0, 0, this.size / 2, this.size / 2);
+            fill(255, 255, 255, 60);
+            ellipse(0, 0, this.size / 2.7, this.size / 2.7);
+            fill(250, 245, 240);
+            ellipse(0, -this.size / 25, this.size / 4, this.size / 5);
+            rect(
+              -this.size / 14,
+              -this.size / 25,
+              this.size / 7,
+              this.size / 6
+            );
+            fill(0, 0, 50, 100);
+            arc(
+              -this.size / 16,
+              -this.size / 25,
+              this.size / 12,
+              this.size / 12,
+              0,
+              180
+            );
+            arc(
+              this.size / 16,
+              -this.size / 25,
+              this.size / 12,
+              this.size / 12,
+              0,
+              180
+            );
+            noFill();
+            if (this.timing) {
+              stroke(255, 255, 255);
+              arc(
+                0,
+                0,
+                this.size / 2,
+                this.size / 2,
+                -90,
+                (this.deathTimer / 5) * 6 - 90
+              );
+            }
+            popMatrix();
+            if (player.demo[2].show && player.demo[2].amount < 1) {
+              player.demo[2].amount++;
+              textAlign("center", "middle");
+              textFont("Audiowide", 20);
+              fill(255, 255, 255);
+              text(player.demo[2].message, 0, this.y + this.size * 1.2);
+              if (this.y + this.size * 1.2 + 300 - player.y > height) {
+                player.demo[2].show = false;
+              }
+            }
+          } else {
+            if (player.demo[3].show && player.demo[3].amount < 1) {
+              player.demo[3].amount++;
+              textAlign("center", "middle");
+              textFont("Audiowide", 20);
+              fill(255, 255, 255);
+              text(player.demo[3].message, 0, this.y + this.size * 1.2);
+              if (this.y + this.size * 1.2 + 300 - player.y > height) {
+                player.demo[3].show = false;
+              }
+            }
+          }
+          if (
+            player.demo[4].show &&
+            player.demo[4].amount < 1 &&
+            this.firstCoin
+          ) {
+            player.demo[4].amount++;
+            textAlign("center", "middle");
+            textFont("Audiowide", 20);
+            fill(255, 255, 255);
+            text(player.demo[4].message, 0, this.y - this.size * 0.6);
+            if (this.y - this.size * 0.6 + 300 - player.y > height) {
+              player.demo[4].show = false;
+            }
+          }
+        };
+
+        Polygon.prototype.collide = function (x, y) {
+          if (!this.canHit) {
+            return false;
+          }
+          var pos1 = 0,
+            pos2 = 0,
+            over = 0,
+            x1,
+            x2,
+            y1,
+            y2,
+            fx1,
+            fx2,
+            fy1,
+            fy2;
+          for (var i = 1; i < this.sides.length; i++) {
+            x1 = this.sides[i].x;
+            x2 = this.sides[i - 1].x;
+            y1 = this.sides[i].y;
+            y2 = this.sides[i - 1].y;
+            fx1 = x1;
+            fx2 = x2;
+            fy1 = y1;
+            fy2 = y2;
+            if (x1 >= x2) {
+              fx1 = x2;
+              fx2 = x1;
+              fy1 = y2;
+              fy2 = y1;
+            }
+            pos1 = (fx2 - fx1) * (y - fy1);
+            pos2 = (fy2 - fy1) * (x - fx1);
+            if (pos1 <= pos2 && x > fx1 && x <= fx2) {
+              return i;
+            }
+          }
+          return false;
+        };
+
+        Polygon.prototype.pack = function () {
+          if (!this.setRot) {
+            this.rotatePlus = (this.rotatePlus + this.speed) % 360;
+          } else {
+            this.rotatePlus += smooth(this.rotatePlus, this.dest, 8);
+          }
+          for (var i = 0; i < this.sides.length; i++) {
+            this.sides[i].x =
+              this.x +
+              sin((i * 360) / this.sideAmount + this.rotatePlus) * this.size;
+            this.sides[i].y =
+              this.y -
+              cos((i * 360) / this.sideAmount + this.rotatePlus) * this.size;
+          }
+          if (this.y + 300 - player.y > height + this.size * 0.5 && !this.old) {
+            this.startY -= 800;
+            polygons.push(new Polygon(this.x, this.startY));
+            this.old = true;
+          } else if (this.y + 300 - player.y > height + this.size * 3) {
+            this.dead = true;
+          }
+          this.display();
+        };
+
+        return Polygon;
+      })();
+
+      function game() {
+        background(0, 0, 0);
+        noStroke();
+        pushMatrix();
+        rotate(12);
+        fill(255, 255, 255, 30);
+        rect(0, 150, width * 1.2, 30);
+        rect(0, 200, width * 1.2, 100);
+        rect(0, 230, width * 1.2, 40);
+        rect(0, 360, width * 1.2, 30);
+        rect(0, 520, width * 1.2, 80);
+        rect(0, 540, width, 20);
+        popMatrix();
+        pushMatrix();
+        player.move();
+        for (var i = 0; i < polygons.length; i++) {
+          player.interact(polygons[i]);
+          if (polygons[i].dead) {
+            polygons.splice(i, 1);
+          }
+        }
+        translate(300 - player.x, 300 - player.y);
+        strokeWeight(2);
+        fill(15, 15, 15);
+        stroke(255, 255, 255);
+        beginShape();
+        vertex(-400, 20);
+        bezierVertex(
+          -100,
+          15 + getRandom.random(Math.floor(frameCount / 10)) * 10,
+          100,
+          15 + getRandom.random(Math.floor(frameCount / 10) + 1) * 10,
+          400,
+          20
+        );
+        vertex(400, 620);
+        vertex(-400, 620);
+        endShape();
+        for (var i = 0; i < polygons.length; i++) {
+          polygons[i].pack();
+        }
+        player.pack();
+        popMatrix();
+        textFont("Audiowide", 30);
+        textAlign("left", "middle");
+        fill(255, 255, 255, 100);
+        text("Score: " + player.score, 10, 25);
+        fill(255, 255, 255);
+        text("Score: " + player.score, 10, 20);
+        fill(255, 255, 255, 100);
+        text(": " + player.coins, 50, 65);
+        fill(255, 255, 255);
+        text(": " + player.coins, 50, 60);
+        coinSize += smooth(coinSize, 20, 10);
+        drawCoin(30, 60, coinSize);
+      }
+
+      var loaded = loaded || false;
+      var imagesToLoad = Object.create(null);
+      imagesToLoad.bgImg = {
+        display: function () {
+          noStroke();
+          background(bgColor);
+          stroke(255, 255, 255, 70);
+          strokeWeight(2);
+          pushMatrix();
+          translate(0, 350);
+          rotate(-30);
+          for (var i = 0; i < 35; i++) {
+            rotate(sin(i * 20) * 15);
+            line(0, 0, 15, 0);
+            translate(25, 0);
+          }
+          popMatrix();
+          pushMatrix();
+          translate(0, 120);
+          rotate(-10);
+          for (var i = 0; i < 35; i++) {
+            rotate(sin(i * 20) * 10);
+            line(0, 0, 15, 0);
+            translate(25, 0);
+          }
+          popMatrix();
+          noStroke();
+          pushMatrix();
+          rotate(12);
+          fill(0, 0, 0, 10);
+          rect(0, 150, width * 1.2, 30);
+          rect(0, 200, width * 1.2, 100);
+          rect(0, 230, width * 1.2, 40);
+          rect(0, 360, width * 1.2, 30);
+          rect(0, 520, width * 1.2, 80);
+          rect(0, 540, width, 20);
+          popMatrix();
+        },
+        width: width,
+        height: height,
+      };
+      imagesToLoad.scoresImg = {
+        display: function () {
+          noStroke();
+          background(bgScoresColor);
+          noStroke();
+          pushMatrix();
+          rotate(12);
+          fill(255, 255, 255, 30);
+          rect(0, 150, width * 1.2, 30);
+          rect(0, 200, width * 1.2, 100);
+          rect(0, 230, width * 1.2, 40);
+          rect(0, 360, width * 1.2, 30);
+          rect(0, 520, width * 1.2, 80);
+          rect(0, 540, width, 20);
+          popMatrix();
+        },
+        width: width,
+        height: height,
+      };
+      var curImg = 0;
+      var imageNames = Object.keys(imagesToLoad);
+      var totalLen = imageNames.length;
+      var images = images || Object.create(null);
+
+      /** BUTTONS **/
+      Button = (function () {
+        // Button constructor
+        Button = function (x, y, w, h, text, func) {
+          this.x = x;
+          this.y = y;
+          this.w = w;
+          this.h = h;
+          this.text = text;
+          this.func = func;
+          this.over = false;
+          this.plus = 0;
+        };
+
+        // Draws the button
+        Button.prototype.display = function () {
+          noStroke();
+          fill(255, 255, 255, 100);
+          rect(this.x, this.y, this.w, this.h);
+          fill(255, 255, 255, (this.plus / (this.w / 2)) * 120);
+          rect(this.x + this.w / 2 - this.plus, this.y, this.plus * 2, this.h);
+          textFont("Audiowide", Math.min(this.w / 2, this.h) / 1.5);
+          fill(0, 0, 0, 150);
+          textAlign("center", "middle");
+          text(this.text, this.x + this.w / 2, this.y + this.h / 2);
+        };
+
+        // Checks to see if the mouse is over the button.
+        Button.prototype.check = function () {
+          return (
+            mouseX > this.x &&
+            mouseX < this.x + this.w &&
+            mouseY > this.y &&
+            mouseY < this.y + this.h
+          );
+        };
+
+        // Puts it all together.
+        Button.prototype.pack = function () {
+          this.over = false;
+          if (this.check()) {
+            this.over = true;
+            overButton = true;
+            if (click) {
+              this.func();
+            }
+          }
+          if (this.over) {
+            this.plus += smooth(this.plus, this.w / 2, 8);
+          } else {
+            this.plus += smooth(this.plus, 0, 8);
+          }
+          this.display();
+        };
+
+        return Button;
+      })();
+
+      // Back button.
+      var backB = new Button(150, 510, 300, 50, "BACK", function () {
+        sceneChanger.reset(menu);
+      });
+
+      // Replay button.
+      var replayB = new Button(100, 450, 300, 50, "REPLAY", function () {
+        sceneChanger.reset(game);
+      });
+
+      /** POLYGON BUTTONS **/
+      var PolyButton = (function () {
+        // A polygon button constructor.
+        PolyButton = function (sides, icon, func) {
+          this.sides = sides;
+          this.x = this.sides[0][0];
+          this.y = this.sides[0][1];
+          this.sides.push(this.sides[0]);
+          this.over = false;
+          this.icon = icon;
+          this.func = func;
+          this.opac = 0;
+        };
+
+        // Draws the button.
+        PolyButton.prototype.display = function () {
+          this.opac += smooth(this.opac, this.over ? 100 : 0, 8);
+          fill(255, 255, 255, 100 + this.opac);
+          noStroke();
+          beginShape();
+          for (var i = 0; i < this.sides.length; i++) {
+            vertex(this.sides[i][0], this.sides[i][1]);
+          }
+          endShape();
+          fill(0, 0, 0, 150);
+          pushMatrix();
+          translate(this.x, this.y);
+          this.icon();
+          popMatrix();
+        };
+
+        // Checks if the mouse is over the button using a line checking formula.
+        PolyButton.prototype.check = function () {
+          var pos1 = 0,
+            pos2 = 0,
+            over = 0,
+            x1,
+            x2,
+            y1,
+            y2,
+            fx1,
+            fx2,
+            fy1,
+            fy2;
+          for (var i = 1; i < this.sides.length; i++) {
+            x1 = this.sides[i][0];
+            x2 = this.sides[i - 1][0];
+            y1 = this.sides[i][1];
+            y2 = this.sides[i - 1][1];
+            fx1 = x1;
+            fx2 = x2;
+            fy1 = y1;
+            fy2 = y2;
+            if (x1 >= x2) {
+              fx1 = x2;
+              fx2 = x1;
+              fy1 = y2;
+              fy2 = y1;
+            }
+            pos1 = (fx2 - fx1) * (mouseY - fy1);
+            pos2 = (mouseX - fx1) * (fy2 - fy1);
+            if (pos1 <= pos2 && mouseX >= fx1 && mouseX <= fx2) {
+              over++;
+            }
+          }
+          return over % 2 === 1;
+        };
+
+        // Puts the two methods together.
+        PolyButton.prototype.pack = function () {
+          this.over = false;
+          if (this.check()) {
+            this.over = true;
+            overButton = true;
+            if (click) {
+              this.func();
+            }
+          }
+          this.display();
+        };
+
+        return PolyButton;
+      })();
+
+      // Makes a new polygon button.
+      var playB, skinsB, scoresB, nextB, prevB, presentB;
+      playB = new PolyButton(
+        [
+          [150, 240],
+          [450, 305],
+          [450, 420],
+          [150, 355],
+        ],
+        function () {
+          translate(110, 40);
+          triangle(0, 0, 80, 55, 0, 90);
+        },
+        function () {
+          sceneChanger.reset(game);
+        }
+      );
+      skinsB = new PolyButton(
+        [
+          [150, 360],
+          [450, 425],
+          [150, 510],
+        ],
+        function () {
+          strokeWeight(3);
+          translate(70, 70);
+          noFill();
+          stroke(0, 0, 0, 150);
+          ellipse(0, 0, 60, 60);
+          noStroke();
+          fill(0, 0, 0, 150);
+          ellipse(-10, -2, 10, 20);
+          ellipse(10, -2, 10, 20);
+        },
+        function () {
+          sceneChanger.reset(skins);
+        }
+      );
+      scoresB = new PolyButton(
+        [
+          [150, 515],
+          [450, 430],
+          [450, 570],
+        ],
+        function () {
+          translate(235, -35);
+          rect(5, 0, 10, 50);
+          rect(-10, 10, 10, 40);
+          rect(-25, 20, 10, 30);
+        },
+        function () {
+          sceneChanger.reset(scores);
+        }
+      );
+      nextB = new PolyButton(
+        [
+          [150, 500],
+          [295, 500],
+          [295, 450],
+          [160, 450],
+          [150, 460],
+        ],
+        function () {
+          if (scorePage === 0) {
+            fill(0, 0, 0, 50);
+          }
+          pushMatrix();
+          translate(70, -23);
+          triangle(-25, 0, 15, 15, 15, -15);
+          popMatrix();
+        },
+        function () {
+          if (scorePage === 0) {
+            return;
+          }
+          scorePage--;
+        }
+      );
+      prevB = new PolyButton(
+        [
+          [305, 500],
+          [450, 500],
+          [450, 460],
+          [440, 450],
+          [305, 450],
+        ],
+        function () {
+          if (scorePage === Math.floor(scoresList.length / 10)) {
+            fill(0, 0, 0, 50);
+          }
+          pushMatrix();
+          translate(70, -23);
+          triangle(25, 0, -15, 15, -15, -15);
+          popMatrix();
+        },
+        function () {
+          if (scorePage === Math.floor(scoresList.length / 10)) {
+            return;
+          }
+          scorePage++;
+        }
+      );
+      presentB = new PolyButton(
+        [
+          [410, 450],
+          [410, 500],
+          [460, 500],
+          [460, 560],
+          [550, 560],
+          [550, 470],
+          [530, 450],
+        ],
+        function () {
+          if (!present.on) {
+            stroke(255, 255, 255);
+          } else {
+            stroke(255, 210, 80);
+          }
+          translate(90, 50);
+          if (present.on) {
+            rotate(sin(frameCount * 3) * 20);
+            scale(1 + sin(frameCount * 1.5) / 5, 1 + sin(frameCount * 1.5) / 5);
+          }
+          noFill();
+          strokeWeight(5);
+          arc(-8, -20, 16, 16, 180, 360);
+          arc(8, -20, 16, 16, 180, 360);
+          noStroke();
+          if (present.on) {
+            fill(180, 80, 255);
+          } else {
+            fill(255, 255, 255);
+          }
+          rect(-18, -20, 36, 36);
+          rect(-20, -20, 40, 10);
+          if (present.on) {
+            fill(255, 210, 80);
+          }
+          rect(-5, -24, 10, 40, 10, 10, 0, 0);
+        },
+        function () {
+          if (!present.on) {
+            return;
+          }
+          present.on = false;
+          for (var i = 0; i < Math.floor(random(5, 10)); i++) {
+            coins.push(new Coin(500, 500));
+            player.coins++;
+          }
+        }
+      );
+
+      // For date.
+      var startDate = new Date(2019, 5, 7);
+      var curDate = new Date();
+
+      // Gets the year out of a date.
+      function returnYear(date) {
+        date = date.toString();
+        var spaceCount = 0;
+        var returnVal = "";
+        for (var i = 0; i < date.length; i++) {
+          if (date.charAt(i) === " ") {
+            spaceCount++;
+          }
+          if (spaceCount === 3 && date.charAt(i) !== " ") {
+            returnVal += date.charAt(i);
+          } else if (spaceCount > 3) {
+            return returnVal;
+          }
+        }
+        return "";
+      }
+
+      // Year when the program was made and the current year.
+      var startYear = returnYear(startDate);
+      var curYear = returnYear(curDate);
+
+      function drawCopyright() {
+        fill(0, 0, 0, 100);
+        textFont("Unica One", 15);
+        textAlign("right", "bottom");
+        text(
+          "©" +
+            startYear +
+            (startYear !== curYear ? " - " + curYear : "") +
+            " AmsR Ghost",
+          width - 10,
+          595
+        );
+      }
+
+      // Makes a function for the menu.
+      var titlePos = 900;
+      function menu() {
+        background(255, 255, 255);
+        image(images.bgImg, 0, 0);
+        textAlign("center", "middle");
+        textFont("Audiowide", 100);
+        pushMatrix();
+        translate(width / 2, 170);
+        rotate(-20);
+        scale(0.75, 1);
+        rotate(25);
+        fill(0, 0, 0, 50);
+        text(title, -2, 10 - titlePos);
+        fill(230, 200, 50);
+        text(title, 6 - titlePos, 6);
+        fill(70, 120, 240);
+        text(title, 3 + titlePos, 3);
+        fill(255, 255, 255);
+        text(title, 0, -titlePos);
+        stroke(255, 255, 255, map(titlePos, 0, 900, 255, 0));
+        strokeWeight(3);
+        line(-320, -50, 320, -50);
+        line(-320, 50, 320, 50);
+        titlePos += smooth(titlePos, 0, 10);
+        noStroke();
+        popMatrix();
+        playB.pack();
+        skinsB.pack();
+        scoresB.pack();
+        drawCopyright();
+      }
+
+      // The shop for buying other characters.
+      var cost = 10;
+      function skins() {
+        background(0, 0, 0);
+        noStroke();
+        pushMatrix();
+        rotate(12);
+        fill(255, 255, 255, 30);
+        rect(0, 150, width * 1.2, 30);
+        rect(0, 200, width * 1.2, 100);
+        rect(0, 230, width * 1.2, 40);
+        rect(0, 360, width * 1.2, 30);
+        rect(0, 520, width * 1.2, 80);
+        rect(0, 540, width, 20);
+        popMatrix();
+        textFont("Audiowide", 80);
+        textAlign("center", "middle");
+        fill(255, 255, 255, 100);
+        text("Skins", width / 2, height / 5.7);
+        fill(255, 255, 255);
+        text("Skins", width / 2, height / 6);
+
+        textSize(30);
+        text("Each character costs " + cost + " coins", 300, 460);
+
+        textAlign("left", "middle");
+        text("Coins: " + player.coins, 10, 30);
+
+        for (var i = 0; i < skinAmount; i++) {
+          if (player.skin === i) {
+            noStroke();
+            fill(255, 255, 255, 50);
+            rect(160 + (i % 4) * 70, 265 + Math.floor(i / 4) * 70, 70, 70);
+          }
+          if (unlocked[i]) {
+            drawPlayer(
+              195 + (i % 4) * 70,
+              300 + Math.floor(i / 4) * 70,
+              60,
+              i,
+              -2,
+              i % colors.length
+            );
+            if (
+              mouseX > 160 + (i % 4) * 70 &&
+              mouseY > 265 + Math.floor(i / 4) * 70 &&
+              mouseX < 230 + (i % 4) * 70 &&
+              mouseY < 335 + Math.floor(i / 4) * 70
+            ) {
+              overButton = true;
+              if (click) {
+                player.skin = i;
+              }
+            }
+          } else {
+            stroke(0, 0, 0);
+            strokeWeight(2);
+            fill(100, 100, 105);
+            if (
+              mouseX > 160 + (i % 4) * 70 &&
+              mouseY > 265 + Math.floor(i / 4) * 70 &&
+              mouseX < 230 + (i % 4) * 70 &&
+              mouseY < 335 + Math.floor(i / 4) * 70
+            ) {
+              overButton = true;
+              fill(130, 130, 130);
+              if (click && player.coins >= cost) {
+                unlocked[i] = true;
+                player.coins -= cost;
+                player.skin = i;
+              }
+            }
+            rect(160 + (i % 4) * 70, 265 + Math.floor(i / 4) * 70, 70, 70);
+            noStroke();
+            fill(20, 20, 30);
+            ellipse(195 + (i % 4) * 70, 295 + Math.floor(i / 4) * 70, 20, 20);
+            rect(190 + (i % 4) * 70, 300 + Math.floor(i / 4) * 70, 10, 15);
+          }
+        }
+        backB.pack();
+      }
+
+      // Draws all the score.
+      var scorePage = 0;
+      function scores() {
+        background(255, 255, 255);
+        image(images.scoresImg, 0, 0);
+        textFont("Audiowide", 80);
+        textAlign("center", "middle");
+        fill(0, 0, 0, 100);
+        text("Scores", width / 2, height / 5.7);
+        fill(255, 255, 255);
+        text("Scores", width / 2, height / 6);
+        textSize(30);
+        text(
+          "Page " +
+            (scorePage + 1) +
+            " of " +
+            Math.floor(scoresList.length / 10 + 1),
+          300,
+          160
+        );
+        textFont("monospace", 25);
+        for (
+          var i = 0;
+          i < Math.min(scoresList.length - scorePage * 10, 10);
+          i++
+        ) {
+          var curName =
+            i +
+            1 +
+            scorePage * 10 +
+            ": " +
+            scoresList[i + scorePage * 10].name +
+            " ";
+          while ((curName + scoresList[i + scorePage * 10].score).length < 35) {
+            curName += "-";
+          }
+          curName += " ";
+          curName += scoresList[i + scorePage * 10].score;
+          fill(255, 255, 255, 45);
+          text(curName, 302, 190 + i * 25 + 2);
+          text(curName, 298, 190 + i * 25 - 2);
+          fill(255, 255, 255);
+          text(curName, 300, 190 + i * 25);
+        }
+        nextB.pack();
+        prevB.pack();
+        backB.pack();
+      }
+
+      // Draws my logo.
+      // {
+      var makerName = "AmsR & Ghost";
+      var logoTimer = 0;
+      var logoSize = 0;
+      var logoR = 160;
+      var bgRectPos = 0;
+      var logoTxtFade = 0;
+      var logoTxtSize = new Bounce(30, 70, 4);
+      var logoTxtR = 20;
+      var logoTris = (function () {
+        logoTris = [];
+
+        for (var i = 0; i < 40; i++) {
+          logoTris.push({
+            x: random(width),
+            y: random(height),
+            size: random(5, 10),
+            r: random(360),
+            speed: random(1, 3),
+          });
+        }
+
+        return logoTris;
+      })();
+
+      // My logo.
+      var greenGhostLogo = function (x, y, size) {
+        noStroke();
+        fill(70, 190, 65);
+        pushMatrix();
+        translate(x, y);
+        scale(size / 600, size / 600);
+        translate(0, -200);
+        beginShape();
+        vertex(-270, 20);
+        bezierVertex(-600, 250, -700, 600, -50, 600);
+        vertex(-125, 400);
+        vertex(-255, 480);
+        bezierVertex(-305, 430, -395, 280, -205, 180);
+        endShape();
+        beginShape();
+        vertex(270, 20);
+        bezierVertex(600, 250, 700, 600, 50, 600);
+        vertex(125, 400);
+        vertex(255, 480);
+        bezierVertex(305, 430, 395, 280, 205, 180);
+        endShape();
+        beginShape();
+        vertex(0, 600);
+        vertex(225, 0);
+        curveVertex(0, -80, -225, 0);
+        endShape();
+        popMatrix();
+      };
+
+      // Intro scene.
+      function logo() {
+        noStroke();
+        logoTimer++;
+        background(0, 0, 0);
+        fill(10, 130, 160, 70);
+        for (var i = 0; i < logoTris.length; i++) {
+          pushMatrix();
+          translate(logoTris[i].x, logoTris[i].y);
+          rotate(logoTris[i].r);
+          triangle(
+            -logoTris[i].size * 0.5,
+            logoTris[i].size * 0.4,
+            logoTris[i].size * 0.5,
+            logoTris[i].size * 0.4,
+            0,
+            -logoTris[i].size * 0.4
+          );
+          popMatrix();
+          logoTris[i].r += logoTris[i].speed;
+          logoTris[i].y -= logoTris[i].speed;
+          if (logoTris[i].y < -15) {
+            logoTris[i].y = height + 15;
+          }
+        }
+        fill(40, 160, 150, 70);
+        rect(600 - bgRectPos, 0, 600, 100);
+        rect(bgRectPos - 600, 500, 600, 100);
+        rect(600 - bgRectPos, 0, 600, 50);
+        rect(bgRectPos - 600, 550, 600, 50);
+        bgRectPos += smooth(bgRectPos, 600, 10);
+        if (bgRectPos > 500) {
+          logoSize += smooth(logoSize, 170, 10);
+          logoR += smooth(logoR, 0, 10);
+          pushMatrix();
+          translate(300, 270);
+          rotate(logoR);
+          greenGhostLogo(0, 0, logoSize);
+          popMatrix();
+        }
+        if (logoR < 10) {
+          textAlign("center", "middle");
+          logoTxtFade += smooth(logoTxtFade, 255, 10);
+          fill(60, 185, 65, logoTxtFade);
+          logoTxtSize.move();
+          textFont("Unica One", logoTxtSize.pos);
+          pushMatrix();
+          translate(300, 460);
+          logoTxtR += smooth(logoTxtR, 0, 20);
+          rotate(logoTxtR);
+          text(makerName, 0, 0, 0);
+          popMatrix();
+        }
+        if (logoTimer > 300 || click) {
+          sceneChanger.reset(menu);
+        }
+      }
+      // }
+
+      // Scene when you die.
+      function gameOver() {
+        image(images.bgImg, 0, 0);
+        textFont("Audiowide", 80);
+        textAlign("center", "middle");
+        fill(0, 0, 0, 100);
+        text("Game Over", width / 2, height / 5.7);
+        fill(255, 255, 255);
+        text("Game Over", width / 2, height / 6);
+        fill(0, 0, 0, 100);
+        textSize(40);
+        text("Score: " + player.score, width / 2, height / 2.1 + 5);
+        text("High Score: " + player.highScore, width / 2, height / 1.75 + 5);
+        text("Coins: " + player.coins, width / 2, height / 1.5 + 5);
+        fill(255, 255, 255);
+        text("Score: " + player.score, width / 2, height / 2.1);
+        text("High Score: " + player.highScore, width / 2, height / 1.75);
+        text("Coins: " + player.coins, width / 2, height / 1.5);
+        coinTarget.x = width / 2;
+        coinTarget.y = height / 1.5;
+        textSize(20);
+        text("Press replay to play again", width / 2, height / 2.8);
+        presentB.pack();
+        replayB.pack();
+        backB.pack();
+      }
+
+      // Sets the scene.
+      scene = logo;
+
+      // Puts it all together.
+      draw = function () {
+        coinTarget.x = 30;
+        coinTarget.y = 60;
+        if (!loaded) {
+          let curName = imageNames[curImg];
+          images[curName] = getImage(
+            imagesToLoad[curName].display,
+            imagesToLoad[curName].width,
+            imagesToLoad[curName].height
+          );
+
+          background(0, 0, 0);
+          textFont("Audiowide", 50);
+          fill(255, 255, 255);
+          textAlign("center", "middle");
+          text("Loading...", width / 2, height / 2);
+
+          curImg++;
+          if (curImg >= totalLen) {
+            loaded = true;
+          }
+        } else {
+          scene();
+          for (var i = coins.length - 1; i >= 0; i--) {
+            coins[i].pack();
+            if (coins[i].dead) {
+              coins.splice(i, 1);
+              coinSize = 25;
+            }
+          }
+          sceneChanger.display();
+        }
+        cursor(overButton ? "pointer" : "default");
+        overButton = false;
+        click = false;
+      };
+
+      // Changes the keyPressed function to whatever you want.
+      keyPressed = function () {
+        keys[keyCode] = true;
+      };
+
+      // Changes the keyReleased function to whatever you want.
+      keyReleased = function () {
+        keys[keyCode] = false;
+      };
+
+      // Changes the mouseClicked function to whatever you want.
+      mouseClicked = function () {
+        click = true;
+      };
+    </script>
+  </body>
+</html>
+<!-- 
+
+      ************************************************************
+      
+           ++++++++++++++    --------    +++++++++++++++++
+
+{   By ~Aryan Maurya Mr.perfect https://amsrportfolio.netlify.app  }
+
+           ++++++++++++++    --------    +++++++++++++++++
+
+      ************************************************************
+ -->
