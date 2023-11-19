@@ -4,7 +4,7 @@ Welcome to Polyjump, an exciting platformer game with a twist! 🚀🎮
 
 ## Play the Game
 
-[Play Now](https://your-username.github.io/Polyjump/) 🕹️
+[Play Now](https://aryan0-1maurya.github.io/Polyjump/) 🕹️
 
 ## About the Game
 
